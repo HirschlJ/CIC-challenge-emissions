@@ -3,20 +3,22 @@ package db;
 import java.util.ArrayList;
 import java.util.List;
 
+import filter.EmissionFilter;
 import model.EmissionData;
 
-public class DBHandlerArrayList implements IDBHandler
+/**
+ * Simple implementation of IDBHandler using and ArrayList as database
+ * @author jakobhirschl
+ *
+ */
+public enum DBHandlerArrayList implements IDBHandler
 {
-	List<EmissionData> data;
+	INSTANCE;
+	private List<EmissionData> data;
 	
-	public DBHandlerArrayList()
+	private DBHandlerArrayList()
 	{
 		data = new ArrayList<EmissionData>();
-	}
-	
-	public DBHandlerArrayList(List<EmissionData> data)
-	{
-		this.data = data;
 	}
 
 	public List<EmissionData> getAllEmissionData()
@@ -24,20 +26,13 @@ public class DBHandlerArrayList implements IDBHandler
 		return data;
 	}
 
-	public List<EmissionData> getEmissionDataFiltered(String department, String commodity, Double emissions)
+	public List<EmissionData> getEmissionDataFiltered(EmissionFilter filter)
 	{
 		List<EmissionData> filteredData = new ArrayList<EmissionData>();
-		if(department != null)
+		for(EmissionData d : data)
 		{
-			
-		}
-		if(commodity != null)
-		{
-			
-		}
-		if(emissions != null)
-		{
-			
+			if(filter.filter(d))
+				filteredData.add(d);
 		}
 		
 		return filteredData;
@@ -45,38 +40,107 @@ public class DBHandlerArrayList implements IDBHandler
 
 	public boolean addData(EmissionData emissionData)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		for(EmissionData d : data)
+		{
+			if(emissionData.equals(d))
+				return false;
+			
+		}
+		data.add(emissionData);
+		return true;
 	}
 
-	public boolean addData(List<EmissionData> emissionDataList)
+	public List<Boolean> addData(List<EmissionData> emissionDataList)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		List<Boolean> returnValues = new ArrayList<Boolean>();
+		for(EmissionData ad : emissionDataList)
+		{
+			boolean add = true;
+			for(EmissionData d : data)
+			{
+				if(ad.equals(d))
+				{
+					add = false;
+					returnValues.add(false);
+					break;
+				}
+				
+			}
+			if(add)
+			{
+				returnValues.add(true);
+				data.add(ad);
+			}
+		}
+		return returnValues;
 	}
 
 	public boolean deleteData(EmissionData emissionData)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return data.remove(emissionData);
 	}
 
-	public boolean deleteData(List<EmissionData> emissionDataList)
+	public List<Boolean> deleteData(List<EmissionData> emissionDataList)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		List<Boolean> returnValues = new ArrayList<Boolean>();
+		for(EmissionData rd : emissionDataList)
+		{
+			returnValues.add(data.remove(rd));
+		}
+		return returnValues;
 	}
 
 	public boolean setData(EmissionData emissionData, EmissionData newEmissionData)
 	{
-		// TODO Auto-generated method stub
+		for(EmissionData d : data)
+		{
+			if(emissionData.equals(d))
+			{
+				d.setCommodity(newEmissionData.getCommodity());
+				d.setDepartment(newEmissionData.getDepartment());
+				d.setEmission(newEmissionData.getEmission());
+				return true;
+			}
+			
+		}
 		return false;
 	}
 
-	public boolean setData(List<EmissionData> emissionDataList, List<EmissionData> newEmissionDataList)
+	public List<Boolean> setData(List<EmissionData> emissionDataList, List<EmissionData> newEmissionDataList)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		if(emissionDataList.size()!=newEmissionDataList.size()) return null;
+		List<Boolean> returnValues = new ArrayList<Boolean>();
+		for(EmissionData sd : emissionDataList)
+		{
+			boolean changed = false;
+			for(EmissionData d : data)
+			{
+				if(sd.equals(d))
+				{
+					EmissionData newEmissionData = newEmissionDataList.get(emissionDataList.indexOf(sd));
+					d.setCommodity(newEmissionData.getCommodity());
+					d.setDepartment(newEmissionData.getDepartment());
+					d.setEmission(newEmissionData.getEmission());
+					returnValues.add(true);
+					changed = true;
+					break;
+				}
+			}
+			if(!changed)
+				returnValues.add(false);
+		}
+		return returnValues;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String stringData = "Data: \n";
+		for(int i = 0; i < data.size(); i++)
+		{
+			stringData += "Number " + i + ": " + data.get(i).toString() + "\n";
+		}
+		return stringData;
 	}
 	
 }

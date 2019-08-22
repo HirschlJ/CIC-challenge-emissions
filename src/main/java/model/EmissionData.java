@@ -11,8 +11,16 @@ public class EmissionData
 	
 	private String department;
 	private String commodity;
-	private double emissions;
+	private double emission;
 	
+	public EmissionData(String department, String commodity, double emission)
+	{
+		super();
+		this.department = department;
+		this.commodity = commodity;
+		this.emission = emission;
+	}
+
 	public long getID()
 	{
 		return ID;
@@ -43,14 +51,14 @@ public class EmissionData
 		this.commodity = commodity;
 	}
 	
-	public double getEmissions()
+	public double getEmission()
 	{
-		return emissions;
+		return emission;
 	}
 	
-	public void setEmissions(double emissions)
+	public void setEmission(double emission)
 	{
-		this.emissions = emissions;
+		this.emission = emission;
 	}
 
 	@Override
@@ -62,7 +70,7 @@ public class EmissionData
 		result = prime * result + ((commodity == null) ? 0 : commodity.hashCode());
 		result = prime * result + ((department == null) ? 0 : department.hashCode());
 		long temp;
-		temp = Double.doubleToLongBits(emissions);
+		temp = Double.doubleToLongBits(emission);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
@@ -85,9 +93,17 @@ public class EmissionData
 			if(other.department != null) return false;
 		}
 		else if(!department.equals(other.department)) return false;
-		if(Double.doubleToLongBits(emissions) != Double.doubleToLongBits(other.emissions)) return false;
+		if(Double.doubleToLongBits(emission) != Double.doubleToLongBits(other.emission)) return false;
 		return true;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "EmissionData [ID=" + ID + ", department=" + department + ", commodity=" + commodity + ", emission="
+				+ emission + "]";
+	}
+	
 	
 	
 }
