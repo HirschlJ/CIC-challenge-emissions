@@ -34,9 +34,9 @@ public class EmissionFilter
 	 */
 	public boolean filter(EmissionData data)
 	{
-		if(department != null && data.getDepartment() != department)
+		if(department != null && !data.getDepartment().equals(department))
 			return false;
-		if(commodity != null && data.getCommodity() != commodity)
+		if(commodity != null && !data.getCommodity().equals(commodity))
 			return false;
 		if(emission != null && data.getEmission() != emission)
 			return false;

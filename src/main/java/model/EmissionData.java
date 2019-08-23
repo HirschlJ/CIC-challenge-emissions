@@ -2,13 +2,9 @@ package model;
 
 import javax.persistence.*;
 
-@Entity
+@Embeddable
 public class EmissionData
 {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long ID;
-	
 	private String department;
 	private String commodity;
 	private double emission;
@@ -19,16 +15,6 @@ public class EmissionData
 		this.department = department;
 		this.commodity = commodity;
 		this.emission = emission;
-	}
-
-	public long getID()
-	{
-		return ID;
-	}
-	
-	public void setID(long iD)
-	{
-		ID = iD;
 	}
 	
 	public String getDepartment()
@@ -66,7 +52,6 @@ public class EmissionData
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (ID ^ (ID >>> 32));
 		result = prime * result + ((commodity == null) ? 0 : commodity.hashCode());
 		result = prime * result + ((department == null) ? 0 : department.hashCode());
 		long temp;
@@ -82,7 +67,6 @@ public class EmissionData
 		if(obj == null) return false;
 		if(getClass() != obj.getClass()) return false;
 		EmissionData other = (EmissionData) obj;
-		if(ID != other.ID) return false;
 		if(commodity == null)
 		{
 			if(other.commodity != null) return false;
@@ -100,7 +84,7 @@ public class EmissionData
 	@Override
 	public String toString()
 	{
-		return "EmissionData [ID=" + ID + ", department=" + department + ", commodity=" + commodity + ", emission="
+		return "EmissionData [department=" + department + ", commodity=" + commodity + ", emission="
 				+ emission + "]";
 	}
 	

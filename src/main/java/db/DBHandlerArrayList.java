@@ -1,7 +1,9 @@
 package db;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import filter.EmissionFilter;
 import model.EmissionData;
@@ -32,7 +34,7 @@ public enum DBHandlerArrayList implements IDBHandler
 		for(EmissionData d : data)
 		{
 			if(filter.filter(d))
-				filteredData.add(d);
+				filteredData.add(d);		
 		}
 		
 		return filteredData;
@@ -52,7 +54,17 @@ public enum DBHandlerArrayList implements IDBHandler
 
 	public List<Boolean> addData(List<EmissionData> emissionDataList)
 	{
+		
 		List<Boolean> returnValues = new ArrayList<Boolean>();
+		
+		//insert initial data immediately to increase performance
+		if(data.size() == 0)
+		{
+			//remove duplicates
+			data.addAll(new LinkedHashSet<EmissionData>(emissionDataList));
+			return returnValues;
+		}
+		
 		for(EmissionData ad : emissionDataList)
 		{
 			boolean add = true;
