@@ -9,9 +9,19 @@ import model.EmissionData;
  */
 public class EmissionFilter
 {
+	public enum EmissionOperator
+	{
+		EQUALS,
+		GREATERTHAN,
+		SMALLERTHAN,
+		GREATEREQUAL,
+		SMALLEREQUAL;
+	}
+	
 	private String department;
 	private String commodity;
 	private Double emission;
+	private EmissionOperator op = EmissionOperator.EQUALS;
 	
 	/**
 	 * 
@@ -38,8 +48,30 @@ public class EmissionFilter
 			return false;
 		if(commodity != null && !data.getCommodity().equals(commodity))
 			return false;
-		if(emission != null && data.getEmission() != emission)
-			return false;
+		if(emission != null)
+		{
+			if(op == EmissionOperator.EQUALS)
+			{
+				if(data.getEmission() != emission) return false;
+			}
+			if(op == EmissionOperator.GREATERTHAN)
+			{
+				if(!(data.getEmission() > emission)) return false;
+			}
+			if(op == EmissionOperator.SMALLERTHAN)
+			{
+				if(!(data.getEmission() < emission)) return false;
+			}
+			if(op == EmissionOperator.GREATEREQUAL)
+			{
+				if(!(data.getEmission() >= emission)) return false;
+			}
+			if(op == EmissionOperator.SMALLEREQUAL)
+			{
+				if(!(data.getEmission() <= emission)) return false;
+			}
+			
+		}
 		return true;
 	}
 
@@ -72,4 +104,16 @@ public class EmissionFilter
 	{
 		this.emission = emission;
 	}
+
+	public EmissionOperator getOp()
+	{
+		return op;
+	}
+
+	public void setOp(EmissionOperator op)
+	{
+		this.op = op;
+	}
+	
+	
 }

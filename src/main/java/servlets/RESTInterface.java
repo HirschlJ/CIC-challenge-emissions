@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import db.DBHandlerArrayList;
 import db.IDBHandler;
 import filter.EmissionFilter;
+import filter.EmissionFilter.EmissionOperator;
 
 /**
  * Servlet implementation for REST Interface using a database as datasource
@@ -36,10 +37,30 @@ public class RESTInterface extends HttpServlet
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		//create Filter
 		String department = request.getParameter("department");
 		String commodity = request.getParameter("commodity");
+		String filterEmission = request.getParameter("emission");
 		Double emission = null;
-		if(request.getParameter("emission") != null) emission = Double.valueOf(request.getParameter("emission"));
+		
+		if(filterEmission!=null)
+		{
+			emission = Double.valueOf(filterEmission.replaceAll("[^\\.0123456789]",""));
+		}
+		EmissionFilter filter = new EmissionFilter(department, commodity, emission);
+		
+		if(filterEmission!=null)
+		{
+			if(filterEmission.contains("<"))
+				filter.setOp(EmissionOperator.SMALLERTHAN);
+			if(filterEmission.contains(">"))
+				filter.setOp(EmissionOperator.GREATERTHAN);
+			if(filterEmission.contains("<="))
+				filter.setOp(EmissionOperator.SMALLEREQUAL);
+			if(filterEmission.contains(">="))
+				filter.setOp(EmissionOperator.GREATEREQUAL);
+		}
+		
 		if(department == null && commodity == null && emission == null)
 		{
 			JSONArray jsArray = new JSONArray(dbHandler.getAllEmissionData());
@@ -48,7 +69,7 @@ public class RESTInterface extends HttpServlet
 		else
 		{
 			JSONArray jsArray = new JSONArray(
-					dbHandler.getEmissionDataFiltered(new EmissionFilter(department, commodity, emission)));
+					dbHandler.getEmissionDataFiltered(filter));
 			response.getWriter().append(jsArray.toString());
 		}
 	}
