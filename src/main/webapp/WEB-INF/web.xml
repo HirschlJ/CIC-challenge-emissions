@@ -4,14 +4,31 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <listener>  
+    <listener-class>
+        servlets.StartupListener
+    </listener-class>
+  </listener>  	
+
   <servlet>
   	<servlet-name>RESTInterface</servlet-name>
   	<display-name>RESTInterface</display-name>
   	<description></description>
-  	<servlet-class>rest.RESTInterface</servlet-class>
+  	<servlet-class>servlets.RESTInterface</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>RESTInterfaceAlternative</servlet-name>
+  	<display-name>RESTInterfaceAlternative</display-name>
+  	<description></description>
+  	<servlet-class>servlets.RESTInterfaceAlternative</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
   	<servlet-name>RESTInterface</servlet-name>
   	<url-pattern>/RESTInterface</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>RESTInterfaceAlternative</servlet-name>
+  	<url-pattern>/RESTInterfaceAlternative</url-pattern>
   </servlet-mapping>
 </web-app>
