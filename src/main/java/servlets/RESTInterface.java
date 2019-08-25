@@ -38,30 +38,9 @@ public class RESTInterface extends HttpServlet
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		//create Filter
-		String department = request.getParameter("department");
-		String commodity = request.getParameter("commodity");
-		String filterEmission = request.getParameter("emission");
-		Double emission = null;
+		EmissionFilter filter = EmissionFilter.createFilter(request);
 		
-		if(filterEmission!=null)
-		{
-			emission = Double.valueOf(filterEmission.replaceAll("[^\\.0123456789]",""));
-		}
-		EmissionFilter filter = new EmissionFilter(department, commodity, emission);
-		
-		if(filterEmission!=null)
-		{
-			if(filterEmission.contains("<"))
-				filter.setOp(EmissionOperator.SMALLERTHAN);
-			if(filterEmission.contains(">"))
-				filter.setOp(EmissionOperator.GREATERTHAN);
-			if(filterEmission.contains("<="))
-				filter.setOp(EmissionOperator.SMALLEREQUAL);
-			if(filterEmission.contains(">="))
-				filter.setOp(EmissionOperator.GREATEREQUAL);
-		}
-		
-		if(department == null && commodity == null && emission == null)
+		if(filter.getDepartment() == null && filter.getCommodity() == null && filter.getEmission() == null)
 		{
 			JSONArray jsArray = new JSONArray(dbHandler.getAllEmissionData());
 			response.getWriter().append(jsArray.toString());

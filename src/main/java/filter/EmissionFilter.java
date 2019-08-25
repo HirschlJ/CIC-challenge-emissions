@@ -1,5 +1,8 @@
 package filter;
 
+import javax.servlet.http.HttpServletRequest;
+
+import filter.EmissionFilter.EmissionOperator;
 import model.EmissionData;
 
 /**
@@ -35,6 +38,38 @@ public class EmissionFilter
 		this.department = department;
 		this.commodity = commodity;
 		this.emission = emission;
+	}
+	
+	/**
+	 * @param request - HttpServletRequest containing the information for the filter
+	 * @return a EmissionFilter that can be used directly to filter EmissionData,
+	 * or together with IDBHandler.
+	 */
+	public static EmissionFilter createFilter(HttpServletRequest request)
+	{
+		String department = request.getParameter("department");
+		String commodity = request.getParameter("commodity");
+		String filterEmission = request.getParameter("emission");
+		Double emission = null;
+		
+		if(filterEmission!=null)
+		{
+			emission = Double.valueOf(filterEmission.replaceAll("[^\\.0123456789]",""));
+		}
+		EmissionFilter filter = new EmissionFilter(department, commodity, emission);
+		
+		if(filterEmission!=null)
+		{
+			if(filterEmission.contains("<"))
+				filter.setOp(EmissionOperator.SMALLERTHAN);
+			if(filterEmission.contains(">"))
+				filter.setOp(EmissionOperator.GREATERTHAN);
+			if(filterEmission.contains("<="))
+				filter.setOp(EmissionOperator.SMALLEREQUAL);
+			if(filterEmission.contains(">="))
+				filter.setOp(EmissionOperator.GREATEREQUAL);
+		}
+		return filter;
 	}
 
 	/**
