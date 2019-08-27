@@ -62,3 +62,5 @@ http://localhost:8080/emission/RESTInterfaceAlternative
 
 ## Test of the Service
 
+The Service is availible for testing on http://emission-active-gerenuk.eu-gb.mybluemix.net/emission/RESTInterface
+The RESTInterfaceAlternative Unfortunatley is not availible for testing. The Server used for testing does not allow it to run.
